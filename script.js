@@ -88,15 +88,8 @@
       el.innerHTML = rows.map(row => T.option(row)).join('');
     });
 
-    // init worker, declare run()
+    // init worker
     const worker = new Worker('worker.js');
-    const run = (data) => void worker.postMessage({
-      from: data.from,
-      test: data.test,
-      len: parseInt(data.len, 10),
-      num: parseInt(data.num, 10),
-    });
-
     worker.onmessage = (() => {
       const el = qsa('#bench-results tbody')[0];
 
@@ -107,6 +100,14 @@
       };
     })();
 
+    // declare run()
+    const run = (data) => void worker.postMessage({
+      from: data.from,
+      test: data.test,
+      len: parseInt(data.len, 10),
+      num: parseInt(data.num, 10),
+    });
+
     // seed results for all tests to invoke JIT
     FNS.tests.forEach(({id}) => void run({
       from: 'seed',
@@ -115,7 +116,7 @@
       num:  FNS.nums[FNS.nums.length - 1].id,
     }));
 
-    // automatically run wo
+    // automatically run test every 5 seconds
     setInterval((() => {
       // cache auto toggle
       const auto = qsa('#bench-auto')[0];
@@ -125,15 +126,6 @@
         r[el.dataset.kind][el.dataset.id] = el;
         return r;
       }, { user: {}, rand: {} });
-
-/* 
- *       const rand_type = qsa('#bench-rand-type')[0];
- *       const rand_len = qsa('#bench-rand-len')[0];
- *       const rand_num = qsa('#bench-rand-num')[0];
- *       const user_type = qsa('#bench-type')[0];
- *       const user_len = qsa('#bench-len')[0];
- *       const user_num = qsa('#bench-num')[0];
- */ 
 
       return () => {
         if (!auto.checked) {
@@ -146,13 +138,6 @@
           r[id] = els.rand[id].checked ? pick(list).id : els.user[id].value;
           return r;
         }, { from: 'auto' }));
-/* 
- *           from: 'auto',
- *           test: els.rand.test.checked ? pick(FNS.tests).id : els.user.test.value,
- *           len: els.rand.len.checked ? pick(FNS.lens).id : els.user.len.value,
- *           num: els.rand.num.checked ? pick(FNS.nums).id : els.user.num.value,
- *         });
- */ 
       };
     })(), 5000);
 
@@ -169,25 +154,20 @@
       // cache table body
       const el = qsa('#bench-results tbody')[0];
 
+      // bind to refresh event
       el.addEventListener('refresh', () => {
         el.innerHTML = make_table(results);
         return false;
       }, false);
     })();
     
+    // bind to click event
     qsa('#run-benchmark')[0].addEventListener('click', (() => {
       // cache elements
       const els = qsa('.bench-param').reduce((r, el) => {
         r[el.dataset.id] = el;
         return r;
       }, {});
-/* 
- *       {
- *         type: qsa('#bench-type')[0], // test func
- *         len: qsa('#bench-len')[0], // string size
- *         num: qsa('#bench-num')[0], // test count
- *       };
- */ 
 
       return () => {
         // run benchmark
@@ -195,14 +175,6 @@
           r[id] = els[id].value; 
           return r;
         }, { from: 'user' }));
-/* 
- *         {
- *           from: 'user',
- *           test: els.test.value,
- *           len: els.len.value,
- *           num: els.num.value,
- *         });
- */ 
 
         // stop event
         return false;

@@ -11,31 +11,25 @@
   };
 
   //
+  // Return a test string of length `len`.
+  //
+  const get_test_str = (len = 10) => {
+    // build initial intermediate string value
+    const v = '<>&\'"asdf' + Math.random() + 'zxcv<>&\'"';
+
+    // calculate # of dups needed to reach desired length
+    const num_dups = Math.ceil((1.0 * len) / v.length);
+
+    // join array of num_dups copies of intermediate string
+    // value, then return a slice of `len` characters
+    return (new Array(num_dups)).fill(v).join('').slice(0, len);
+  };
+
+  //
   // Create array containing `num` test strings of length `len`.
   //
   const get_test_data = (num = 100000, len = 10) => {
-    return Object.freeze((new Array(num)).map(() => {
-      // build initial intermediate string value
-      const v = '<>&\'"' + Math.random() + '<>&\'"';
-
-      // calculate # of dups needed to reach desired length
-      const num_dups = Math.ceil((1.0 * len) / v.length);
-
-      // join array of num_dups copies of intermediate string
-      // value, then return a slice of `len` characters
-      const t = (new Array(num_dups)).fill(v).join('').slice(0, len);
-
-      console.log({
-        num: num,
-        len: len,
-        v: v,
-        v_len: v.length,
-        t_len: t.length,
-        num_dups: num_dups,
-      });
-
-      return t;
-    }));
+    return Object.freeze((new Array(num)).map(() => get_test_str(len)));
   };
 
   // number fo times to run benchmark
