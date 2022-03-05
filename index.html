@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang='en-US'>
+  <head>
+    <meta charset='utf-8'/>
+    <title></title>
+  </head>
+
+  <body>
+    <p>greeting-hi: <span id='greeting-hi'></span></p>
+    <p>greeting-sup: <span id='greeting-sup'></span></p>
+    <p>uri: <span id='uri'></span></p>
+
+    <p>
+      <select
+        id='bench-test'
+        class='bench-param'
+        title='Select benchmark type.'
+        aria-label='Select benchmark type.'
+        data-id='test'
+        data-kind='user'
+      ></select>
+    </p>
+
+    <p>
+      <select
+        id='bench-len'
+        class='bench-param'
+        title='Select test string length.'
+        aria-label='Select test string length.'
+        data-id='len'
+        data-kind='user'
+      ></select>
+    </p>
+
+    <p>
+      <select
+        id='bench-num'
+        class='bench-param'
+        title='Select test count.'
+        aria-label='Select count.'
+        data-id='num'
+        data-kind='user'
+      ></select>
+    </p>
+
+    <p>
+      <button
+        id='run-benchmark'
+        title='Run benchmark.'
+        aria-label='Run benchmark.'
+      >
+        Run Benchmark
+      </button>
+    </p>
+
+    <p>
+      <label
+        for='bench-auto'
+        title='Automatically run benchmark periodically?'
+        aria-label='Automatically run benchmark periodically?'
+      >
+        <input
+          type='checkbox'
+          id='bench-auto'
+          title='Automatically run benchmark periodically?'
+          aria-label='Automatically run benchmark periodically?'
+          checked
+        />
+
+        Run Automatically?
+      </label>
+    </p>
+
+    <p>
+      <label
+        for='bench-rand-test'
+        title='Pick random test type for automatic benchmarks?'
+        aria-label='Pick random test type for automatic benchmarks?'
+      >
+        <input
+          type='checkbox'
+          id='bench-rand-test'
+          class='bench-rand-toggle'
+          title='Pick random test type for automatic benchmarks?'
+          aria-label='Pick random test type for automatic benchmarks?'
+          data-id='test'
+          data-kind='rand'
+          checked
+        />
+
+        Random Type?
+      </label>
+    </p>
+
+    <p>
+      <label
+        for='bench-rand-len'
+        title='Pick random string length for automatic benchmarks?'
+        aria-label='Pick random string length for automatic benchmarks?'
+      >
+        <input
+          type='checkbox'
+          id='bench-rand-len'
+          class='bench-rand-toggle'
+          title='Pick random string length for automatic benchmarks?'
+          aria-label='Pick random string length for automatic benchmarks?'
+          data-id='len'
+          data-kind='rand'
+          checked
+        />
+
+        Random String Length?
+      </label>
+    </p>
+
+    <p>
+      <label
+        for='bench-rand-num'
+        title='Pick random test count for automatic benchmarks?'
+        aria-label='Pick random test count for automatic benchmarks?'
+      >
+        <input
+          type='checkbox'
+          id='bench-rand-num'
+          class='bench-rand-toggle'
+          title='Pick random test count for automatic benchmarks?'
+          aria-label='Pick random test count for automatic benchmarks?'
+          data-id='num'
+          data-kind='rand'
+          checked
+        />
+
+        Random Test Count?
+      </label>
+    </p>
+
+
+    <table id='bench-results'>
+      <caption>Benchmark Results</caption>
+
+      <thead>
+        <tr>
+          <th
+            title='Test ID.'
+            aria-label='Test ID.'
+          >ID</th>
+          <th
+            title='Average duration (ms).'
+            aria-label='Average duration (ms).'
+          >Mean</th>
+
+          <th
+            title='Test string size (bytes).'
+            aria-label='Test string size (bytes).'
+          >Length</th>
+
+          <th
+            title='Number of tests.'
+            aria-label='Number of tests.'
+          >Count</th>
+
+          <th
+            title='Test source (user or auto).'
+            aria-label='Test source (user or auto).'
+          >Source</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      </tbody>
+    </table>
+
+    <script type='text/javascript' src='common.js'></script>
+    <script type='text/javascript' src='script.js'></script>
+  </body>
+</html>
+
