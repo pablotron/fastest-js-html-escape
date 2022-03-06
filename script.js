@@ -4,20 +4,8 @@
   // get shared functions
   const {qs, qsa, h, pick, last} = FNS;
 
-  // convert string to upper case
-  const uc = (s) => s.toUpperCase();
-
   // templates
   const T = Object.freeze({
-    hi: (s) => `
-      hello ${h(uc(s))}!
-    `,
-
-    // template w/destructuring
-    sup: ({first, last}) => `
-      sup ${h(uc(last))}, ${h(first)}!
-    `,
-
     option: ({id, name, text}) => `
       <option
         title='${h(text.trim())}'
@@ -77,13 +65,9 @@
   let results = [];
 
   // create benchmark result table body HTML
-  const make_table = (() => {
-    const FILTER_IDS = ['test', 'len', 'num', 'from'];
-
-    return (rows, fs) => rows.filter(row => FILTER_IDS.every(id => (
-      (fs[id] === 'all') || (('' + row.data[id]) === fs[id]))
-    )).map((row) => T.row(row)).join('');
-  })();
+  const make_table = (rows, fs) => rows.filter(row => Object.keys(fs).every(
+    id => (fs[id] === 'all') || (('' + row.data[id]) === fs[id])
+  )).map(row => T.row(row)).join('');
 
   // trigger custom event on elements matching selector
   const trigger = (sel, type, data) => {
@@ -100,14 +84,11 @@
     return r;
   }, {});
 
-  // multiline string test
-  const name = `paul<>\'"&
-  duncan<>&\'`;
   document.addEventListener('DOMContentLoaded', () => {
     // set title and aria-label for normalized time column header
     (() => {
       const el = qs('#norm-header');
-      ['title', 'aria-label'].forEach(s => el.setAttribute(s, FNS.norm_label));
+      ['title', 'aria-label'].forEach(s => el[s] = FNS.norm_label);
     })();
 
     // populate benchmark parameter and result filter selects
@@ -119,7 +100,7 @@
     // populate result filter selects
     qsa('.result-filter').forEach((() => {
       const ALL = { id: 'all', name: 'all', text: 'all' };
-      return (el) => {
+      return el => {
         const rows = [ALL].concat(FNS[el.dataset.id + 's'])
         el.innerHTML = rows.map(row => T.filter_option(row)).join('');
       };
@@ -167,22 +148,6 @@
       };
     })(), 5000);
 
-    // test templates
-    (() => {
-      qs('#greeting-hi').innerHTML = T.hi(name);
-
-      qs('#greeting-sup').innerHTML = T.sup({
-        first: 'paul',
-        last: 'duncan',
-      });
-
-      qs('#uri').innerText = FNS.params({
-        foo: '<>@#$',
-        bar: 'barldkasjkl',
-        '!<> ': 'b z+=?',
-      });
-    })();
-
     // bind to refresh event
     (() => {
       // cache table body
@@ -196,11 +161,9 @@
     })();
 
     // bind to change event
-    qsa('.result-filter').forEach((el) => {
-      el.addEventListener('change', () => {
-        setTimeout(() => void trigger('#bench-results tbody', 'refresh'), 10);
-      });
-    });
+    qsa('.result-filter').forEach(el => el.addEventListener('change', () => {
+      setTimeout(() => trigger('#bench-results tbody', 'refresh'), 10);
+    }));
 
     // bind to click event
     qs('#run-benchmark').addEventListener('click', (() => {
