@@ -1,20 +1,14 @@
 (() => {
   "use strict";
 
-  // html escape
-  const qsa = FNS.qsa;
-  const h = FNS.h1;
+  // get shared functions
+  const {qs, qsa, h, pick, last} = FNS;
 
   // convert string to upper case
   const uc = (s) => s.toUpperCase();
 
-  // trim string, compact whitespace
-  const pack = (s) => s.trim().replace(/\s+/, ' ');
-
-  const round = (v, p = 3) => Math.round(v * (10.0 ** p)) / (10.0 ** p);
-
   // templates
-  const T = {
+  const T = Object.freeze({
     hi: (s) => `
       hello ${h(uc(s))}!
     `,
@@ -49,15 +43,15 @@
 
         <td
           class='right'
-          title='Mean test duration (ms).'
-          aria-label='Normalized mean test duration (ms).'
-        >${h('' + round(mean))}</td>
+          title='Mean duration (μs).'
+          aria-label='Mean duration (μs).'
+        >${h(mean.toFixed(3))}</td>
 
         <td
           class='right'
-          title='Normalized mean test duration (ms/1k chars).'
-          aria-label='Normalized mean test duration (ms/1k chars).'
-        >${h('' + round(norm_mean))}</td>
+          title='${h(FNS.norm_label)}'
+          aria-label='${h(FNS.norm_label)}'
+        >${h(norm_mean.toFixed(3))}</td>
 
         <td
           class='right'
@@ -73,12 +67,12 @@
 
         <td
           class='right'
-          title='Test source (one of "user" or "auto").'
-          aria-label='Test source (one of "user" or "auto").'
+          title='Test source (one of "auto", "seed", or "user").'
+          aria-label='Test source (one of "auto", "seed", or "user").'
         >${h(data.from)}</td>
       </tr>
     `,
-  };
+  });
 
   let results = [];
 
@@ -90,12 +84,6 @@
       (fs[id] === 'all') || (('' + row.data[id]) === fs[id]))
     )).map((row) => T.row(row)).join('');
   })();
-
-  // pick random element of array
-  const pick = (ary) => ary[Math.floor(Math.random() * ary.length)];
-
-  // get last element of array
-  const last = (ary) => ary[ary.length - 1];
 
   // trigger custom event on elements matching selector
   const trigger = (sel, type, data) => {
@@ -116,6 +104,12 @@
   const name = `paul<>\'"&
   duncan<>&\'`;
   document.addEventListener('DOMContentLoaded', () => {
+    // set title and aria-label for normalized time column header
+    (() => {
+      const el = qs('#norm-header');
+      ['title', 'aria-label'].forEach(s => el.setAttribute(s, FNS.norm_label));
+    })();
+
     // populate benchmark parameter and result filter selects
     qsa('.bench-param').forEach((el) => {
       const rows = FNS[el.dataset.id + 's'];
@@ -133,18 +127,13 @@
 
     // init worker
     const worker = new Worker('worker.js');
-    worker.onmessage = (() => {
-      const el = qsa('#bench-results tbody')[0];
-
-      return (e) => {
-        console.log(e.data);
-        results.unshift(e.data);
-        trigger('#bench-results tbody', 'refresh');
-      };
-    })();
+    worker.onmessage = (e) => {
+      results.unshift(e.data);
+      trigger('#bench-results tbody', 'refresh');
+    };
 
     // declare run()
-    const run = (data) => void worker.postMessage({
+    const run = (data) => worker.postMessage({
       from: data.from,
       test: data.test,
       len: parseInt(data.len, 10),
@@ -161,39 +150,33 @@
 
     // automatically run test every 5 seconds
     setInterval((() => {
-      // cache auto toggle
-      const auto = qsa('#bench-auto')[0];
-
-      // cache elements
+      // cache auto toggle, param selects, and rand toggles
       const els = qsa('.bench-param, .bench-rand-toggle').reduce((r, el) => {
         r[el.dataset.kind][el.dataset.id] = el;
         return r;
-      }, { user: {}, rand: {} });
+      }, { auto: qs('#bench-auto'), user: {}, rand: {} });
 
       return () => {
-        if (!auto.checked) {
-          return;
+        if (els.auto.checked) {
+          run(Object.keys(els.rand).reduce((r, id) => {
+            const list = FNS[id + 's'];
+            r[id] = els.rand[id].checked ? pick(list).id : els.user[id].value;
+            return r;
+          }, { from: 'auto' }));
         }
-
-        // run benchmark
-        run(Object.keys(els.rand).reduce((r, id) => {
-          const list = FNS[id + 's'];
-          r[id] = els.rand[id].checked ? pick(list).id : els.user[id].value;
-          return r;
-        }, { from: 'auto' }));
       };
     })(), 5000);
 
     // test templates
     (() => {
-      qsa('#greeting-hi')[0].innerHTML = T.hi(name);
+      qs('#greeting-hi').innerHTML = T.hi(name);
 
-      qsa('#greeting-sup')[0].innerHTML = T.sup({
+      qs('#greeting-sup').innerHTML = T.sup({
         first: 'paul',
         last: 'duncan',
       });
 
-      qsa('#uri')[0].innerText = FNS.params({
+      qs('#uri').innerText = FNS.params({
         foo: '<>@#$',
         bar: 'barldkasjkl',
         '!<> ': 'b z+=?',
@@ -203,7 +186,7 @@
     // bind to refresh event
     (() => {
       // cache table body
-      const el = qsa('#bench-results tbody')[0];
+      const el = qs('#bench-results tbody');
 
       // bind to refresh event
       el.addEventListener('refresh', () => {
@@ -220,7 +203,7 @@
     });
 
     // bind to click event
-    qsa('#run-benchmark')[0].addEventListener('click', (() => {
+    qs('#run-benchmark').addEventListener('click', (() => {
       // cache elements
       const els = qsa('.bench-param').reduce((r, el) => {
         r[el.dataset.id] = el;
@@ -238,5 +221,40 @@
         return false;
       };
     })());
+
+    (() => {
+      const el = qs('#download');
+      const COLS = [{
+        name: 'ID',
+        get: row => row.data.test,
+      }, {
+        name: 'Time',
+        get: row => row.mean,
+      }, {
+        name: 'Norm Time',
+        get: row => row.norm_mean,
+      }, {
+        name: 'Length',
+        get: row => row.data.len,
+      }, {
+        name: 'Count',
+        get: row => row.data.num,
+      }, {
+        name: 'Source',
+        get: row => row.data.from,
+      }];
+
+      const esc = v => `"${v.toString().replaceAll('"', '""')}"`;
+      const get_href = () => 'data:text/csv,' + encodeURIComponent(
+        [COLS.map(({name}) => esc(name)).join(',')].concat(
+          results.map(row => COLS.map(col => esc(col.get(row))).join(','))
+        ).join("\r\n")
+      );
+
+      el.addEventListener('click', () => {
+        el.download = 'results.csv';
+        el.href = get_href();
+      }, false);
+    })()
   });
 })();

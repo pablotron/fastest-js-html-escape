@@ -1,7 +1,14 @@
 const FNS = (() => {
   "use strict";
 
-  // query selector all
+  // pick random element of array
+  const pick = (ary) => ary[Math.floor(Math.random() * ary.length)];
+
+  // get last element of array
+  const last = (ary) => ary[ary.length - 1];
+
+  // query selector and query selector all
+  const qs = (s) => document.querySelector(s);
   const qsa = (s) => Array.from(document.querySelectorAll(s));
 
   // html escape (text-based, old)
@@ -181,40 +188,44 @@ const FNS = (() => {
     `,
   }];
 
-  const LENGTHS = [{
+  const LENS = [{
     id: '10',
     name: '10 characters',
-    text: '10 character strings.'
+    text: 'Strings of length 10.'
   }, {
     id: '100',
     name: '100 characters',
-    text: '100 character strings.'
+    text: 'Strings of length 100.'
   }, {
     id: '1000',
     name: '1000 characters',
-    text: '1000 character strings.'
+    text: 'Strings of length 1000.'
+  }, {
+    id: '2000',
+    name: '2000 characters',
+    text: 'Strings of length 2000.'
   }];
 
   const NUMS = [{
-    id: '1000000',
-    name: '1,000,000 tests',
-    text: '1,000,000 tests.'
+    id: '10',
+    name: '10 tests',
+    text: 'Run 10 tests.'
   }, {
-    id: '2000000',
-    name: '2,000,000 tests',
-    text: '2,000,000 tests.'
+    id: '20',
+    name: '10 tests',
+    text: 'Run 10 tests.'
   }, {
-    id: '3000000',
-    name: '3,000,000 tests',
-    text: '3,000,000 tests.'
+    id: '30',
+    name: '30 tests',
+    text: 'Run 30 tests.'
   }, {
-    id: '4000000',
-    name: '4,000,000 tests',
-    text: '4,000,000 tests.'
+    id: '40',
+    name: '40 tests',
+    text: 'Run 40 tests.'
   }, {
-    id: '5000000',
-    name: '5,000,000 tests',
-    text: '5,000,000 tests.'
+    id: '50',
+    name: '50 tests',
+    text: 'Run 50 tests.'
   }];
 
   const FROMS = [{
@@ -231,20 +242,42 @@ const FNS = (() => {
     text: 'user',
   }];
 
+  // calculate normalization coefficient numerator
+  const norm_coef_num = parseFloat(last(NUMS).id) * parseFloat(last(LENS).id);
+
+  // calculate normalized duration label
+  const norm_label = (() => {
+    const num = parseInt(last(NUMS).id, 10);
+    const len = parseInt(last(LENS).id, 10);
+
+    return `
+      Normalized mean duration (~μs/test for ${num} strings of length ${len}).
+    `.trim();
+  })();
+
   return Object.freeze({
     tests: TESTS,
-    lens: LENGTHS,
+    lens: LENS,
     nums: NUMS,
     froms: FROMS,
+
+    pick: pick,
+    last: last,
+    params: params,
+    qs: qs,
     qsa: qsa,
+
     h0: h0,
     h1: h1,
     h2: h2,
     h3: h3,
     h4: h4,
     h5: h5,
-    h6: h5,
+    h6: h6,
     // hd: hd,
-    params: params,
+    h: h6,
+
+    norm_coef_num: norm_coef_num,
+    norm_label: norm_label,
   });
 })();

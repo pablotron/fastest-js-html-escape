@@ -174,17 +174,60 @@
     </article><!-- left -->
 
     <article class='right'>
+      <p>
+        <a
+          href='#'
+          id='download'
+          title='Download results as CSV.'
+          aria-label='Download results as CSV.'
+        >Download</a>
+      </p>
+
       <table id='bench-results'>
         <caption>Results</caption>
 
         <thead>
-          <tr>
+          <tr class='names'>
             <th
               title='Test ID.'
               aria-label='Test ID.'
-            >
-              ID
+            >ID</th>
 
+            <th
+              class='right'
+              title='Mean duration (μs).'
+              aria-label='Mean duration (μs).'
+            >
+              Time
+            </th>
+
+            <th
+              id='norm-header'
+              class='right'
+              title='...'
+              aria-label='...'
+            >Norm Time</th>
+
+            <th
+              class='right'
+              title='Test string size (bytes).'
+              aria-label='Test string size (bytes).'
+            >Length</th>
+
+            <th
+              class='right'
+              title='Number of tests.'
+              aria-label='Number of tests.'
+            >Count</th>
+
+            <th
+              title='Test source (auto, seed, or user).'
+              aria-label='Test source (auto, seed, or user).'
+            >Source</th>
+          </tr>
+
+          <tr class='filters'>
+            <th>
               <select
                 class='result-filter'
                 title='Select test filter.'
@@ -193,29 +236,11 @@
               ></select>
             </th>
 
-            <th
-              class='right'
-              title='Mean test duration (ms).'
-              aria-label='Mean test duration (ms).'
-            >
-              Time
+            <th colspan='2'>
+              &nbsp;
             </th>
 
-            <th
-              class='right'
-              title='Normalized mean test duration (ms/1k chars).'
-              aria-label='Normalized mean test duration (ms/1k chars).'
-            >
-              Norm Time
-            </th>
-
-            <th
-              class='right'
-              title='Test string size (bytes).'
-              aria-label='Test string size (bytes).'
-            >
-              Length
-
+            <th>
               <select
                 class='result-filter'
                 title='Select string length filter.'
@@ -224,13 +249,7 @@
               ></select>
             </th>
 
-            <th
-              class='right'
-              title='Number of tests.'
-              aria-label='Number of tests.'
-            >
-              Count
-
+            <th>
               <select
                 class='result-filter'
                 title='Select test count filter.'
@@ -239,12 +258,7 @@
               ></select>
             </th>
 
-            <th
-              title='Test source (auto, seed, or user).'
-              aria-label='Test source (auto, seed, or user).'
-            >
-              Source
-
+            <th>
               <select
                 class='result-filter'
                 title='Select test source filter.'
