@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  overflow: none;
+  width: 100vw;
+  height: 100vh;
+
+  /* enable grid */
+  display: grid;
+
+  grid: "lb rb";
+  grid-template-columns: 30% auto;
+  /* grid-template-rows: 50px auto; */
+}
+
+h1 {
+  margin: 0px 20px 20px 0px;
+  text-align: center;
+  font-size: 14pt;
+}
+
+article {
+  font-family: sans-serif;
+  padding: 20px 20px;
+  overflow-y: auto;
+}
+
+header {
+  grid-area: hd;
+}
+
+label {
+  font-weight: bold;
+  font-size: 80%;
+  display: block;
+}
+
+.left select {
+  display: block;
+  width: 100%;
+}
+
+fieldset {
+  margin-bottom: 20px;
+}
+
+fieldset legend {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+article.left {
+  grid-area: lb;
+}
+
+article.right {
+  grid-area: rb;
+}
+
+.right th {
+  font-size: 80%;
+}
+
+th.right, td.right {
+  text-align: right;
+}
+
+.hidden {
+  display: none;
+}

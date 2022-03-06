@@ -2,173 +2,263 @@
 <html lang='en-US'>
   <head>
     <meta charset='utf-8'/>
-    <title></title>
+    <title>HTML Escape Benchmarks</title>
+    <link rel='stylesheet' type='text/css' href='style.css'/>
   </head>
 
   <body>
-    <p>greeting-hi: <span id='greeting-hi'></span></p>
-    <p>greeting-sup: <span id='greeting-sup'></span></p>
-    <p>uri: <span id='uri'></span></p>
+    <article class='left'>
+      <h1>HTML Escape Benchmarks</h1>
 
-    <p>
-      <select
-        id='bench-test'
-        class='bench-param'
-        title='Select benchmark type.'
-        aria-label='Select benchmark type.'
-        data-id='test'
-        data-kind='user'
-      ></select>
-    </p>
+      <div class='hidden'>
+        <p>greeting-hi: <span id='greeting-hi'></span></p>
+        <p>greeting-sup: <span id='greeting-sup'></span></p>
+        <p>uri: <span id='uri'></span></p>
+      </div>
 
-    <p>
-      <select
-        id='bench-len'
-        class='bench-param'
-        title='Select test string length.'
-        aria-label='Select test string length.'
-        data-id='len'
-        data-kind='user'
-      ></select>
-    </p>
+      <fieldset>
+        <legend>Benchmark Settings</legend>
 
-    <p>
-      <select
-        id='bench-num'
-        class='bench-param'
-        title='Select test count.'
-        aria-label='Select count.'
-        data-id='num'
-        data-kind='user'
-      ></select>
-    </p>
+        <p>
+          <label
+            for='bench-test'
+            title='Select benchmark test.'
+            aria-label='Select benchmark test.'
+          >
+            Test
+          </label>
 
-    <p>
-      <button
-        id='run-benchmark'
-        title='Run benchmark.'
-        aria-label='Run benchmark.'
-      >
-        Run Benchmark
-      </button>
-    </p>
+          <select
+            id='bench-test'
+            class='bench-param'
+            title='Select benchmark test.'
+            aria-label='Select benchmark test.'
+            data-id='test'
+            data-kind='user'
+          ></select>
+        </p>
 
-    <p>
-      <label
-        for='bench-auto'
-        title='Automatically run benchmark periodically?'
-        aria-label='Automatically run benchmark periodically?'
-      >
-        <input
-          type='checkbox'
-          id='bench-auto'
-          title='Automatically run benchmark periodically?'
-          aria-label='Automatically run benchmark periodically?'
-          checked
-        />
+        <p>
+          <label
+            for='bench-len'
+            title='Select test string length.'
+            aria-label='Select test string length.'
+          >
+            String Length
+          </label>
 
-        Run Automatically?
-      </label>
-    </p>
+          <select
+            id='bench-len'
+            class='bench-param'
+            title='Select test string length.'
+            aria-label='Select test string length.'
+            data-id='len'
+            data-kind='user'
+          ></select>
+        </p>
 
-    <p>
-      <label
-        for='bench-rand-test'
-        title='Pick random test type for automatic benchmarks?'
-        aria-label='Pick random test type for automatic benchmarks?'
-      >
-        <input
-          type='checkbox'
-          id='bench-rand-test'
-          class='bench-rand-toggle'
-          title='Pick random test type for automatic benchmarks?'
-          aria-label='Pick random test type for automatic benchmarks?'
-          data-id='test'
-          data-kind='rand'
-          checked
-        />
+        <p>
+          <label
+            for='bench-num'
+            title='Select number of tests.'
+            aria-label='Select number of tests.'
+          >
+            Test Count
+          </label>
 
-        Random Type?
-      </label>
-    </p>
+          <select
+            id='bench-num'
+            class='bench-param'
+            title='Select number of tests.'
+            aria-label='Select number of tests.'
+            data-id='num'
+            data-kind='user'
+          ></select>
+        </p>
 
-    <p>
-      <label
-        for='bench-rand-len'
-        title='Pick random string length for automatic benchmarks?'
-        aria-label='Pick random string length for automatic benchmarks?'
-      >
-        <input
-          type='checkbox'
-          id='bench-rand-len'
-          class='bench-rand-toggle'
-          title='Pick random string length for automatic benchmarks?'
-          aria-label='Pick random string length for automatic benchmarks?'
-          data-id='len'
-          data-kind='rand'
-          checked
-        />
+        <p>
+          <button
+            id='run-benchmark'
+            title='Run benchmark.'
+            aria-label='Run benchmark.'
+          >
+            Run Benchmark
+          </button>
+        </p>
+      </fieldset>
 
-        Random String Length?
-      </label>
-    </p>
+      <fieldset>
+        <legend>Automatic Benchmark Settings</legend>
 
-    <p>
-      <label
-        for='bench-rand-num'
-        title='Pick random test count for automatic benchmarks?'
-        aria-label='Pick random test count for automatic benchmarks?'
-      >
-        <input
-          type='checkbox'
-          id='bench-rand-num'
-          class='bench-rand-toggle'
-          title='Pick random test count for automatic benchmarks?'
-          aria-label='Pick random test count for automatic benchmarks?'
-          data-id='num'
-          data-kind='rand'
-          checked
-        />
+        <p>
+          <label
+            for='bench-auto'
+            title='Automatically run benchmark periodically?'
+            aria-label='Automatically run benchmark periodically?'
+          >
+            <input
+              type='checkbox'
+              id='bench-auto'
+              title='Automatically run benchmark periodically?'
+              aria-label='Automatically run benchmark periodically?'
+              checked
+            />
 
-        Random Test Count?
-      </label>
-    </p>
+            Run Automatically?
+          </label>
+        </p>
 
+        <p>
+          <label
+            for='bench-rand-test'
+            title='Pick random test type for automatic benchmarks?'
+            aria-label='Pick random test type for automatic benchmarks?'
+          >
+            <input
+              type='checkbox'
+              id='bench-rand-test'
+              class='bench-rand-toggle'
+              title='Pick random test type for automatic benchmarks?'
+              aria-label='Pick random test type for automatic benchmarks?'
+              data-id='test'
+              data-kind='rand'
+              checked
+            />
 
-    <table id='bench-results'>
-      <caption>Benchmark Results</caption>
+            Random Type?
+          </label>
+        </p>
 
-      <thead>
-        <tr>
-          <th
-            title='Test ID.'
-            aria-label='Test ID.'
-          >ID</th>
-          <th
-            title='Average duration (ms).'
-            aria-label='Average duration (ms).'
-          >Mean</th>
+        <p>
+          <label
+            for='bench-rand-len'
+            title='Pick random string length for automatic benchmarks?'
+            aria-label='Pick random string length for automatic benchmarks?'
+          >
+            <input
+              type='checkbox'
+              id='bench-rand-len'
+              class='bench-rand-toggle'
+              title='Pick random string length for automatic benchmarks?'
+              aria-label='Pick random string length for automatic benchmarks?'
+              data-id='len'
+              data-kind='rand'
+              checked
+            />
 
-          <th
-            title='Test string size (bytes).'
-            aria-label='Test string size (bytes).'
-          >Length</th>
+            Random String Length?
+          </label>
+        </p>
 
-          <th
-            title='Number of tests.'
-            aria-label='Number of tests.'
-          >Count</th>
+        <p>
+          <label
+            for='bench-rand-num'
+            title='Pick random test count for automatic benchmarks?'
+            aria-label='Pick random test count for automatic benchmarks?'
+          >
+            <input
+              type='checkbox'
+              id='bench-rand-num'
+              class='bench-rand-toggle'
+              title='Pick random test count for automatic benchmarks?'
+              aria-label='Pick random test count for automatic benchmarks?'
+              data-id='num'
+              data-kind='rand'
+              checked
+            />
 
-          <th
-            title='Test source (user or auto).'
-            aria-label='Test source (user or auto).'
-          >Source</th>
-        </tr>
-      </thead>
+            Random Test Count?
+          </label>
+        </p>
+      </fieldset>
+    </article><!-- left -->
 
-      <tbody>
-      </tbody>
-    </table>
+    <article class='right'>
+      <table id='bench-results'>
+        <caption>Results</caption>
+
+        <thead>
+          <tr>
+            <th
+              title='Test ID.'
+              aria-label='Test ID.'
+            >
+              ID
+
+              <select
+                class='result-filter'
+                title='Select test filter.'
+                aria-label='Select test filter.'
+                data-id='test'
+              ></select>
+            </th>
+
+            <th
+              class='right'
+              title='Mean test duration (ms).'
+              aria-label='Mean test duration (ms).'
+            >
+              Time
+            </th>
+
+            <th
+              class='right'
+              title='Normalized mean test duration (ms/1k chars).'
+              aria-label='Normalized mean test duration (ms/1k chars).'
+            >
+              Norm Time
+            </th>
+
+            <th
+              class='right'
+              title='Test string size (bytes).'
+              aria-label='Test string size (bytes).'
+            >
+              Length
+
+              <select
+                class='result-filter'
+                title='Select string length filter.'
+                aria-label='Select string length filter.'
+                data-id='len'
+              ></select>
+            </th>
+
+            <th
+              class='right'
+              title='Number of tests.'
+              aria-label='Number of tests.'
+            >
+              Count
+
+              <select
+                class='result-filter'
+                title='Select test count filter.'
+                aria-label='Select test count filter.'
+                data-id='num'
+              ></select>
+            </th>
+
+            <th
+              title='Test source (auto, seed, or user).'
+              aria-label='Test source (auto, seed, or user).'
+            >
+              Source
+
+              <select
+                class='result-filter'
+                title='Select test source filter.'
+                aria-label='Select test source filter.'
+                data-id='from'
+              ></select>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+      </table>
+    </article><!-- right -->
 
     <script type='text/javascript' src='common.js'></script>
     <script type='text/javascript' src='script.js'></script>

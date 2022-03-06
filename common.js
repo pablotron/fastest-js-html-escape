@@ -137,44 +137,44 @@ const FNS = (() => {
 
   const TESTS = [{
     id: 'h0',
-    name: "h0: HTML Escape (Reduce)",
+    name: "h0: Reduce",
     text: `
       HTML escape with replacement regular expression array.
     `,
   }, {
     id: 'h1',
-    name: "h1: HTML Escape (Reduce, Frozen Array)",
+    name: "h1: Reduce, Frozen Array",
     text: `
       HTML escape with frozen replacement regular expression array.
     `,
   }, {
     id: 'h2',
-    name: "h2: HTML Escape (Match, Capture)",
+    name: "h2: Match, Capture",
     text: `
       HTML escape with capturing regex and replacement entity map.
     `,
   }, {
     id: 'h3',
-    name: "h3: HTML Escape (Match, Capture, Frozen)",
+    name: "h3: Match, Capture, Frozen",
     text: `
       HTML escape with capturing regex and frozen replacement entity map.
     `,
   }, {
     id: 'h4',
-    name: "h4: HTML Escape (Match, No Capture)",
+    name: "h4: Match, No Capture",
     text: `
       HTML escape with non-capturing regex and replacement entity map.
     `,
   }, {
     id: 'h5',
-    name: "h5: HTML Escape (Match, No Capture, Frozen Map)",
+    name: "h5: Match, No Capture, Frozen Map",
     text: `
       HTML escape with non-capturing regex and frozen replacement entity
       map.
     `,
   }, {
     id: 'h6',
-    name: "h6: HTML Escape (Match, No Capture, Frozen Map, Frozen Function)",
+    name: "h6: Match, No Capture, Frozen Map/Function",
     text: `
       HTML escape with non-capturing regex, frozen replacement entity
       map, and frozen function.
@@ -196,31 +196,46 @@ const FNS = (() => {
   }];
 
   const NUMS = [{
-    id: '100000',
-    name: '100,000 tests',
-    text: '100,000 tests.'
+    id: '1000000',
+    name: '1,000,000 tests',
+    text: '1,000,000 tests.'
   }, {
-    id: '200000',
-    name: '200,000 tests',
-    text: '200,000 tests.'
+    id: '2000000',
+    name: '2,000,000 tests',
+    text: '2,000,000 tests.'
   }, {
-    id: '300000',
-    name: '300,000 tests',
-    text: '300,000 tests.'
+    id: '3000000',
+    name: '3,000,000 tests',
+    text: '3,000,000 tests.'
   }, {
-    id: '400000',
-    name: '400,000 tests',
-    text: '400,000 tests.'
+    id: '4000000',
+    name: '4,000,000 tests',
+    text: '4,000,000 tests.'
   }, {
-    id: '500000',
-    name: '500,000 tests',
-    text: '500,000 tests.'
+    id: '5000000',
+    name: '5,000,000 tests',
+    text: '5,000,000 tests.'
+  }];
+
+  const FROMS = [{
+    id: 'auto',
+    name: 'auto',
+    text: 'auto',
+  }, {
+    id: 'seed',
+    name: 'seed',
+    text: 'seed',
+  }, {
+    id: 'user',
+    name: 'user',
+    text: 'user',
   }];
 
   return Object.freeze({
     tests: TESTS,
     lens: LENGTHS,
     nums: NUMS,
+    froms: FROMS,
     qsa: qsa,
     h0: h0,
     h1: h1,

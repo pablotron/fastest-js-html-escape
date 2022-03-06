@@ -11,6 +11,8 @@
   // trim string, compact whitespace
   const pack = (s) => s.trim().replace(/\s+/, ' ');
 
+  const round = (v, p = 3) => Math.round(v * (10.0 ** p)) / (10.0 ** p);
+
   // templates
   const T = {
     hi: (s) => `
@@ -30,7 +32,15 @@
       >${h(name)}</option>
     `,
 
-    row: ({data, mean}) => `
+    filter_option: ({id, name, text}) => `
+      <option
+        title='${h(text.trim())}'
+        aria-label='${h(text.trim())}'
+        value='${h(id)}'
+      >${h(id)}</option>
+    `,
+
+    row: ({data, mean, norm_mean}) => `
       <tr>
         <td
           title='Benchmark ID'
@@ -38,21 +48,31 @@
         >${h(data.test)}</td>
 
         <td
-          title='Average test duration (ms).'
-          aria-label='Average test duration (ms).'
-        >${h('' + mean)}</td>
+          class='right'
+          title='Mean test duration (ms).'
+          aria-label='Normalized mean test duration (ms).'
+        >${h('' + round(mean))}</td>
 
         <td
+          class='right'
+          title='Normalized mean test duration (ms/1k chars).'
+          aria-label='Normalized mean test duration (ms/1k chars).'
+        >${h('' + round(norm_mean))}</td>
+
+        <td
+          class='right'
           title='Test string size (bytes).'
           aria-label='Test string size (bytes).'
         >${h('' + data.len)}</td>
 
         <td
+          class='right'
           title='Number of tests.'
           aria-label='Number of tests.'
         >${h('' + data.num)}</td>
 
         <td
+          class='right'
           title='Test source (one of "user" or "auto").'
           aria-label='Test source (one of "user" or "auto").'
         >${h(data.from)}</td>
@@ -61,13 +81,21 @@
   };
 
   let results = [];
-  // create benchmark result row element (tr)
-  const make_table = (rows) => {
-    return rows.map((row) => T.row(row)).join('');
-  }
+
+  // create benchmark result table body HTML
+  const make_table = (() => {
+    const FILTER_IDS = ['test', 'len', 'num', 'from'];
+
+    return (rows, fs) => rows.filter(row => FILTER_IDS.every(id => (
+      (fs[id] === 'all') || (('' + row.data[id]) === fs[id]))
+    )).map((row) => T.row(row)).join('');
+  })();
 
   // pick random element of array
   const pick = (ary) => ary[Math.floor(Math.random() * ary.length)];
+
+  // get last element of array
+  const last = (ary) => ary[ary.length - 1];
 
   // trigger custom event on elements matching selector
   const trigger = (sel, type, data) => {
@@ -78,15 +106,30 @@
     });
   };
 
+  // get benchmark result filters
+  const get_result_filters = () => qsa('.result-filter').reduce((r, el) => {
+    r[el.dataset.id] = el.value;
+    return r;
+  }, {});
+
   // multiline string test
   const name = `paul<>\'"&
   duncan<>&\'`;
   document.addEventListener('DOMContentLoaded', () => {
-    // populate benchmark parameter selects
+    // populate benchmark parameter and result filter selects
     qsa('.bench-param').forEach((el) => {
       const rows = FNS[el.dataset.id + 's'];
       el.innerHTML = rows.map(row => T.option(row)).join('');
     });
+
+    // populate result filter selects
+    qsa('.result-filter').forEach((() => {
+      const ALL = { id: 'all', name: 'all', text: 'all' };
+      return (el) => {
+        const rows = [ALL].concat(FNS[el.dataset.id + 's'])
+        el.innerHTML = rows.map(row => T.filter_option(row)).join('');
+      };
+    })());
 
     // init worker
     const worker = new Worker('worker.js');
@@ -112,8 +155,8 @@
     FNS.tests.forEach(({id}) => void run({
       from: 'seed',
       test: id,
-      len:  FNS.lens[FNS.lens.length - 1].id,
-      num:  FNS.nums[FNS.nums.length - 1].id,
+      len:  last(FNS.lens).id,
+      num:  last(FNS.nums).id,
     }));
 
     // automatically run test every 5 seconds
@@ -142,25 +185,40 @@
     })(), 5000);
 
     // test templates
-    qsa('#greeting-hi')[0].innerHTML = T.hi(name);
-    qsa('#greeting-sup')[0].innerHTML = T.sup({ first: 'paul', last: 'duncan'});
-    qsa('#uri')[0].innerText = FNS.params({
-      foo: '<>@#$',
-      bar: 'barldkasjkl',
-      '!<> ': 'b z+=?',
-    });
+    (() => {
+      qsa('#greeting-hi')[0].innerHTML = T.hi(name);
 
+      qsa('#greeting-sup')[0].innerHTML = T.sup({
+        first: 'paul',
+        last: 'duncan',
+      });
+
+      qsa('#uri')[0].innerText = FNS.params({
+        foo: '<>@#$',
+        bar: 'barldkasjkl',
+        '!<> ': 'b z+=?',
+      });
+    })();
+
+    // bind to refresh event
     (() => {
       // cache table body
       const el = qsa('#bench-results tbody')[0];
 
       // bind to refresh event
       el.addEventListener('refresh', () => {
-        el.innerHTML = make_table(results);
+        el.innerHTML = make_table(results, get_result_filters());
         return false;
       }, false);
     })();
-    
+
+    // bind to change event
+    qsa('.result-filter').forEach((el) => {
+      el.addEventListener('change', () => {
+        setTimeout(() => void trigger('#bench-results tbody', 'refresh'), 10);
+      });
+    });
+
     // bind to click event
     qsa('#run-benchmark')[0].addEventListener('click', (() => {
       // cache elements
@@ -172,7 +230,7 @@
       return () => {
         // run benchmark
         run(Object.keys(els).reduce((r, id) => {
-          r[id] = els[id].value; 
+          r[id] = els[id].value;
           return r;
         }, { from: 'user' }));
 

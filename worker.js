@@ -35,28 +35,34 @@
   // number fo times to run benchmark
   const NUM_RUNS = 20;
 
+  // bind to message handler
+  // let r = [];
   onmessage = (e) => {
     // cache test data and test function
     const a = get_test_data(e.data.num, e.data.len);
     const fn = FNS[e.data.test];
+
+    // normalize benchmark per 1e6 tests
+    // const NORM_COEF = 1000000.0 / e.data.num;
+    const NORM_COEF = 1.0;
 
     // run benchmark NUM_RUNS times, save run times
     //
     // note: we deliberately store the results in r which is outside the
     // scope of this function in order to prevent the work from being
     // optimized away.
-    let r = [];
     const runs = (new Array(NUM_RUNS).fill(0)).map(
-      () => bench(() => { r = a.map(fn) })
+      () => (NORM_COEF * bench(() => { a.map(fn) }))
     );
 
     // calculate mean time
-    const mean = runs.reduce((r, v) => r + v, 0) / (1.0 * NUM_RUNS);
+    const mean = runs.reduce((r, v) => r + v / (1.0 * NUM_RUNS), 0);
 
     // post result
     postMessage({
       data: e.data,
       mean: mean,
+      norm_mean: mean * (1000.0 / e.data.len), // FIXME
       runs: runs,
     });
   };
