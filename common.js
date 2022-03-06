@@ -137,11 +137,6 @@ const FNS = (() => {
 //     return (v) => { e.textContent = v; return e.innerHTML };
 //   })();
 
-  // URL-escape a hash of parameters
-  const params = (v = {}) => Object.entries(v).map(
-    e => e.map(encodeURIComponent).join('=')
-  ).join('&');
-
   const TESTS = [{
     id: 'h0',
     name: "h0: Reduce",
@@ -255,6 +250,29 @@ const FNS = (() => {
     `.trim();
   })();
 
+  // escape value as csv cell
+  const csv_esc = v => `"${v.toString().replaceAll('"', '""')}"`;
+
+  const CSV_COLS = [{
+    name: 'ID',
+    get: row => row.data.test,
+  }, {
+    name: 'Time',
+    get: row => row.mean,
+  }, {
+    name: 'Norm Time',
+    get: row => row.norm_mean,
+  }, {
+    name: 'Length',
+    get: row => row.data.len,
+  }, {
+    name: 'Count',
+    get: row => row.data.num,
+  }, {
+    name: 'Source',
+    get: row => row.data.from,
+  }];
+
   return Object.freeze({
     tests: TESTS,
     lens: LENS,
@@ -263,7 +281,6 @@ const FNS = (() => {
 
     pick: pick,
     last: last,
-    params: params,
     qs: qs,
     qsa: qsa,
 
@@ -279,5 +296,8 @@ const FNS = (() => {
 
     norm_coef_num: norm_coef_num,
     norm_label: norm_label,
+
+    csv_cols: CSV_COLS,
+    csv_esc: csv_esc,
   });
 })();

@@ -62,21 +62,15 @@
     `,
   });
 
-  let results = [];
-
   // create benchmark result table body HTML
   const make_table = (rows, fs) => rows.filter(row => Object.keys(fs).every(
     id => (fs[id] === 'all') || (('' + row.data[id]) === fs[id])
   )).map(row => T.row(row)).join('');
 
   // trigger custom event on elements matching selector
-  const trigger = (sel, type, data) => {
-    return qsa(sel).map((el) => {
-      const ev = new CustomEvent(type, data);
-      el.dispatchEvent(ev);
-      return ev;
-    });
-  };
+  const trigger = (sel, type, data) => qsa(sel).forEach(
+    el => el.dispatchEvent(new CustomEvent(type, data))
+  );
 
   // get benchmark result filters
   const get_result_filters = () => qsa('.result-filter').reduce((r, el) => {
@@ -85,6 +79,8 @@
   }, {});
 
   document.addEventListener('DOMContentLoaded', () => {
+    let results = [];
+
     // set title and aria-label for normalized time column header
     (() => {
       const el = qs('#norm-header');
@@ -100,7 +96,7 @@
     // populate result filter selects
     qsa('.result-filter').forEach((() => {
       const ALL = { id: 'all', name: 'all', text: 'all' };
-      return el => {
+      return (el) => {
         const rows = [ALL].concat(FNS[el.dataset.id + 's'])
         el.innerHTML = rows.map(row => T.filter_option(row)).join('');
       };
@@ -165,7 +161,7 @@
       setTimeout(() => trigger('#bench-results tbody', 'refresh'), 10);
     }));
 
-    // bind to click event
+    // bind to #run-benchmark click
     qs('#run-benchmark').addEventListener('click', (() => {
       // cache elements
       const els = qsa('.bench-param').reduce((r, el) => {
@@ -173,51 +169,24 @@
         return r;
       }, {});
 
-      return () => {
-        // run benchmark
-        run(Object.keys(els).reduce((r, id) => {
-          r[id] = els[id].value;
-          return r;
-        }, { from: 'user' }));
-
-        // stop event
-        return false;
-      };
+      return () => run(Object.keys(els).reduce((r, id) => {
+        r[id] = els[id].value;
+        return r;
+      }, { from: 'user' }));
     })());
 
+    // bind to #download click
     (() => {
       const el = qs('#download');
-      const COLS = [{
-        name: 'ID',
-        get: row => row.data.test,
-      }, {
-        name: 'Time',
-        get: row => row.mean,
-      }, {
-        name: 'Norm Time',
-        get: row => row.norm_mean,
-      }, {
-        name: 'Length',
-        get: row => row.data.len,
-      }, {
-        name: 'Count',
-        get: row => row.data.num,
-      }, {
-        name: 'Source',
-        get: row => row.data.from,
-      }];
+      const [cols, esc] = [FNS.csv_cols, FNS.csv_esc];
 
-      const esc = v => `"${v.toString().replaceAll('"', '""')}"`;
       const get_href = () => 'data:text/csv,' + encodeURIComponent(
-        [COLS.map(({name}) => esc(name)).join(',')].concat(
-          results.map(row => COLS.map(col => esc(col.get(row))).join(','))
+        [cols.map(({name}) => esc(name)).join(',')].concat(
+          results.map(row => cols.map(({get}) => esc(get(row))).join(','))
         ).join("\r\n")
       );
 
-      el.addEventListener('click', () => {
-        el.download = 'results.csv';
-        el.href = get_href();
-      }, false);
+      el.addEventListener('click', () => void(el.href = get_href()), false);
     })()
   });
 })();
