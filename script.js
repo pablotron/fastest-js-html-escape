@@ -186,7 +186,7 @@
         ).join("\r\n")
       );
 
-      el.addEventListener('click', () => void(el.href = get_href()), false);
+      el.addEventListener('click', () => void(el.href = get_href()));
     })()
   });
 })();
