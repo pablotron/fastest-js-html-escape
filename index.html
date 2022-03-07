@@ -11,7 +11,11 @@
       <h1>HTML Escape Benchmarks</h1>
 
       <fieldset>
-        <legend>Benchmark Settings</legend>
+        <legend>Manual Settings</legend>
+
+        <p class='help-text'>
+          This panel allows you to configure and run a manual test.
+        </p>
 
         <p>
           <label
@@ -63,7 +67,12 @@
       </fieldset>
 
       <fieldset>
-        <legend>Automatic Benchmark Settings</legend>
+        <legend>Automatic Settings</legend>
+
+        <p class='help-text'>
+          This panel allows you to toggle automatic tests and edit
+          automatic test settings.
+        </p>
 
         <p>
           <label
@@ -125,19 +134,27 @@
           </label>
         </p>
       </fieldset>
+
+      <fieldset>
+        <legend>Other</legend>
+
+        <p class='help-text'>
+          This panel contains other miscellaneous options.
+        </p>
+
+        <p>
+          <a
+            href='#'
+            id='download'
+            title='Download results as CSV.'
+            aria-label='Download results as CSV.'
+            download='results.csv'
+          >Download</a>
+        </p>
+      </fieldset>
     </article><!-- left -->
 
     <article class='right'>
-      <p>
-        <a
-          href='#'
-          id='download'
-          title='Download results as CSV.'
-          aria-label='Download results as CSV.'
-          download='results.csv'
-        >Download</a>
-      </p>
-
       <table id='bench-results'>
         <caption>Results</caption>
 
