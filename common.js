@@ -37,7 +37,6 @@ const FNS = (() => {
     return (v) => E.reduce((r, e) => r.replace(...e), v);
   })();
 
-
   // html escape (text-based, new, capture)
   const h2 = (() => {
     // characters to match
@@ -129,6 +128,41 @@ const FNS = (() => {
     return (v) => v.replace(M, (c) => E[c]);
   })());
 
+  // html escape (reduce, replaceall)
+  const h7 = (() => {
+    const E = [
+      ['&', '&amp;'],
+      ['<', '&lt;'],
+      ['>', '&gt;'],
+      ["'", '&apos;'],
+      ['"', '&quot;'],
+    ];
+
+    return (v) => E.reduce((r, e) => r.replaceAll(e[0], e[1]), v);
+  })();
+
+  // html escape (reduce, replaceall, freeze)
+  const h8 = (() => {
+    const E = Object.freeze([
+      ['&', '&amp;'],
+      ['<', '&lt;'],
+      ['>', '&gt;'],
+      ["'", '&apos;'],
+      ['"', '&quot;'],
+    ]);
+
+    return (v) => E.reduce((r, e) => r.replaceAll(e[0], e[1]), v);
+  })();
+
+  // html escape (replaceall explicit)
+  const h9 = (v) => {
+    return v.replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll("'", '&apos;')
+      .replaceAll('"', '&quot;');
+  };
+
 //   // html escape (dom-based)
 //   // note: textContent rather than innerText; the latter does not
 //   // handle newlines correctly
@@ -137,6 +171,7 @@ const FNS = (() => {
 //     return (v) => { e.textContent = v; return e.innerHTML };
 //   })();
 
+  // html escape functions
   const TESTS = [{
     id: 'h0',
     name: "h0: Reduce",
@@ -318,6 +353,7 @@ const FNS = (() => {
     qs: qs,
     qsa: qsa,
 
+    // html escape functions
     h0: h0,
     h1: h1,
     h2: h2,
@@ -325,6 +361,9 @@ const FNS = (() => {
     h4: h4,
     h5: h5,
     h6: h6,
+    h7: h7,
+    h8: h8,
+    h9: h9,
     // hd: hd,
     h: h6,
 
