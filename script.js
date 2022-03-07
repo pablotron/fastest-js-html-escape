@@ -22,24 +22,17 @@
       >${h(id)}</option>
     `,
 
-    row: ({data, mean, norm_mean}) => `
+    row: ({data, mean}) => `
       <tr>
         <td
-          title='Benchmark ID'
-          aria-label='Benchmark ID'
+          title='Test source (one of "auto", "seed", or "user").'
+          aria-label='Test source (one of "auto", "seed", or "user").'
+        >${h(data.from)}</td>
+
+        <td
+          title='Test ID'
+          aria-label='Test ID'
         >${h(data.test)}</td>
-
-        <td
-          class='right'
-          title='Mean duration (μs).'
-          aria-label='Mean duration (μs).'
-        >${h(mean.toFixed(3))}</td>
-
-        <td
-          class='right'
-          title='${h(FNS.norm_label)}'
-          aria-label='${h(FNS.norm_label)}'
-        >${h(norm_mean.toFixed(3))}</td>
 
         <td
           class='right'
@@ -49,15 +42,9 @@
 
         <td
           class='right'
-          title='Number of tests.'
-          aria-label='Number of tests.'
-        >${h('' + data.num)}</td>
-
-        <td
-          class='right'
-          title='Test source (one of "auto", "seed", or "user").'
-          aria-label='Test source (one of "auto", "seed", or "user").'
-        >${h(data.from)}</td>
+          title='Mean duration (μs).'
+          aria-label='Mean duration (μs).'
+        >${h(mean.toFixed(3))}</td>
       </tr>
     `,
   });
@@ -80,12 +67,6 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     let results = [];
-
-    // set title and aria-label for normalized time column header
-    (() => {
-      const el = qs('#norm-header');
-      ['title', 'aria-label'].forEach(s => el[s] = FNS.norm_label);
-    })();
 
     // populate benchmark parameter and result filter selects
     qsa('.bench-param').forEach((el) => {
@@ -120,7 +101,6 @@
       from: data.from,
       test: data.test,
       len: parseInt(data.len, 10),
-      num: parseInt(data.num, 10),
     });
 
     // seed results for all tests to invoke JIT
@@ -128,7 +108,6 @@
       from: 'seed',
       test: id,
       len:  last(FNS.lens).id,
-      num:  last(FNS.nums).id,
     }));
 
     // queue auto test every 100ms if auto is enabled and mutex is

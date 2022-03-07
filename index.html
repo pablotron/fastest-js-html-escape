@@ -52,25 +52,6 @@
         </p>
 
         <p>
-          <label
-            for='bench-num'
-            title='Select number of tests.'
-            aria-label='Select number of tests.'
-          >
-            Test Count
-          </label>
-
-          <select
-            id='bench-num'
-            class='bench-param'
-            title='Select number of tests.'
-            aria-label='Select number of tests.'
-            data-id='num'
-            data-kind='user'
-          ></select>
-        </p>
-
-        <p>
           <button
             id='run-benchmark'
             title='Run benchmark.'
@@ -105,21 +86,21 @@
         <p>
           <label
             for='bench-rand-test'
-            title='Pick random test type for automatic benchmarks?'
-            aria-label='Pick random test type for automatic benchmarks?'
+            title='Pick random test for automatic benchmarks?'
+            aria-label='Pick random test for automatic benchmarks?'
           >
             <input
               type='checkbox'
               id='bench-rand-test'
               class='bench-rand-toggle'
-              title='Pick random test type for automatic benchmarks?'
-              aria-label='Pick random test type for automatic benchmarks?'
+              title='Pick random test for automatic benchmarks?'
+              aria-label='Pick random test for automatic benchmarks?'
               data-id='test'
               data-kind='rand'
               checked
             />
 
-            Random Type?
+            Random Test?
           </label>
         </p>
 
@@ -143,27 +124,6 @@
             Random String Length?
           </label>
         </p>
-
-        <p>
-          <label
-            for='bench-rand-num'
-            title='Pick random test count for automatic benchmarks?'
-            aria-label='Pick random test count for automatic benchmarks?'
-          >
-            <input
-              type='checkbox'
-              id='bench-rand-num'
-              class='bench-rand-toggle'
-              title='Pick random test count for automatic benchmarks?'
-              aria-label='Pick random test count for automatic benchmarks?'
-              data-id='num'
-              data-kind='rand'
-              checked
-            />
-
-            Random Test Count?
-          </label>
-        </p>
       </fieldset>
     </article><!-- left -->
 
@@ -184,24 +144,14 @@
         <thead>
           <tr class='names'>
             <th
+              title='Test source (auto, seed, or user).'
+              aria-label='Test source (auto, seed, or user).'
+            >Source</th>
+
+            <th
               title='Test ID.'
               aria-label='Test ID.'
-            >ID</th>
-
-            <th
-              class='right'
-              title='Mean duration (μs).'
-              aria-label='Mean duration (μs).'
-            >
-              Time
-            </th>
-
-            <th
-              id='norm-header'
-              class='right'
-              title='...'
-              aria-label='...'
-            >Norm Time</th>
+            >Test</th>
 
             <th
               class='right'
@@ -211,17 +161,23 @@
 
             <th
               class='right'
-              title='Number of tests.'
-              aria-label='Number of tests.'
-            >Count</th>
-
-            <th
-              title='Test source (auto, seed, or user).'
-              aria-label='Test source (auto, seed, or user).'
-            >Source</th>
+              title='Mean duration (μs).'
+              aria-label='Mean duration (μs).'
+            >
+              Time
+            </th>
           </tr>
 
           <tr class='filters'>
+            <th>
+              <select
+                class='result-filter'
+                title='Select test source filter.'
+                aria-label='Select test source filter.'
+                data-id='from'
+              ></select>
+            </th>
+
             <th>
               <select
                 class='result-filter'
@@ -231,34 +187,12 @@
               ></select>
             </th>
 
-            <th colspan='2'>
-              &nbsp;
-            </th>
-
             <th>
               <select
                 class='result-filter'
                 title='Select string length filter.'
                 aria-label='Select string length filter.'
                 data-id='len'
-              ></select>
-            </th>
-
-            <th>
-              <select
-                class='result-filter'
-                title='Select test count filter.'
-                aria-label='Select test count filter.'
-                data-id='num'
-              ></select>
-            </th>
-
-            <th>
-              <select
-                class='result-filter'
-                title='Select test source filter.'
-                aria-label='Select test source filter.'
-                data-id='from'
               ></select>
             </th>
           </tr>

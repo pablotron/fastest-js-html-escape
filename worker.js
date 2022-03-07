@@ -4,45 +4,32 @@
   // load functions
   importScripts('common.js');
 
-  const NUM_RUNS = 1000;
+  const NUM_RUNS = 10000;
 
-  // run benchmark num times, return mean duration (μs)
-  const bench = (num, init_fn, test_fn) => {
-    const prefix = Math.random().toString();
-    let marks = [];
-    let measures = [];
+  // run function NUM_RUNS times, return mean duration (μs)
+  const bench = (init_fn, test_fn) => {
+    const prefix = Math.random().toString(),
+          m0 = prefix + '-0', // start mark name
+          m1 = prefix + '-1', // end mark name
+          m2 = prefix + '-2'; // measure name
 
-    let r = 0.0;
-    for (let i = 0; i < num; i++) {
-      const m0 = prefix + '-0', // start mark name
-            m1 = prefix + '-1', // end mark name
-            m2 = prefix + '-2'; // measure name
-
-      // measure function
-      const data = init_fn();
-      performance.mark(m0);
-      for (let i = 0; i < NUM_RUNS; i++) {
-        test_fn(data);
-      }
-      performance.mark(m1);
-
-      // get duration
-      const {duration} = performance.measure(m2, m0, m1);
-
-      // save ids
-      marks.push(m0, m1);
-      measures.push(m2);
-
-      // normalize, add to result
-      r += duration / (1.0 * NUM_RUNS * num);
+    // run function NUM_RUNS times, measure function
+    const data = init_fn();
+    performance.mark(m0);
+    for (let i = 0; i < NUM_RUNS; i++) {
+      test_fn(data);
     }
+    performance.mark(m1);
+
+    // get duration
+    const {duration} = performance.measure(m2, m0, m1);
 
     // clear performance measurements
-    marks.forEach(s => void performance.clearMarks(s));
-    measures.forEach(s => performance.clearMeasures(s));
+    [m0, m1].forEach(s => void performance.clearMarks(s));
+    performance.clearMeasures(m2);
 
-    // return mean duration
-    return r * 1000;
+    // return mean duration in us
+    return 1000 * duration / (1.0 * NUM_RUNS);
   };
 
   //
@@ -66,7 +53,7 @@
     const fn = FNS[e.data.test];
 
     // run benchmark get mean time
-    const mean = bench(e.data.num, () => get_test_str(e.data.len), fn);
+    const mean = bench(() => get_test_str(e.data.len), fn);
 
     // post result
     postMessage({

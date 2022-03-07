@@ -270,28 +270,6 @@ const FNS = (() => {
     text: 'Strings of length 3000.'
   }];
 
-  const NUMS = [{
-    id: '10',
-    name: '10 tests',
-    text: 'Run 10 tests.'
-  }, {
-    id: '20',
-    name: '10 tests',
-    text: 'Run 10 tests.'
-  }, {
-    id: '30',
-    name: '30 tests',
-    text: 'Run 30 tests.'
-  }, {
-    id: '40',
-    name: '40 tests',
-    text: 'Run 40 tests.'
-  }, {
-    id: '50',
-    name: '50 tests',
-    text: 'Run 50 tests.'
-  }];
-
   const FROMS = [{
     id: 'auto',
     name: 'auto',
@@ -306,46 +284,26 @@ const FNS = (() => {
     text: 'user',
   }];
 
-  // calculate normalization coefficient numerator
-  const norm_coef_num = parseFloat(last(NUMS).id) * parseFloat(last(LENS).id);
-
-  // calculate normalized duration label
-  const norm_label = (() => {
-    const num = parseInt(last(NUMS).id, 10);
-    const len = parseInt(last(LENS).id, 10);
-
-    return `
-      Normalized mean duration (~μs/test for ${num} strings of length ${len}).
-    `.trim();
-  })();
-
   // escape value as csv cell
   const csv_esc = v => `"${v.toString().replaceAll('"', '""')}"`;
 
   const CSV_COLS = [{
-    name: 'ID',
+    name: 'Source',
+    get: row => row.data.from,
+  }, {
+    name: 'Test',
     get: row => row.data.test,
-  }, {
-    name: 'Time',
-    get: row => row.mean,
-  }, {
-    name: 'Norm Time',
-    get: row => row.norm_mean,
   }, {
     name: 'Length',
     get: row => row.data.len,
   }, {
-    name: 'Count',
-    get: row => row.data.num,
-  }, {
-    name: 'Source',
-    get: row => row.data.from,
+    name: 'Time',
+    get: row => row.mean,
   }];
 
   return Object.freeze({
     tests: TESTS,
     lens: LENS,
-    nums: NUMS,
     froms: FROMS,
 
     pick: pick,
@@ -366,9 +324,6 @@ const FNS = (() => {
     h9: h9,
     // hd: hd,
     h: h6,
-
-    norm_coef_num: norm_coef_num,
-    norm_label: norm_label,
 
     csv_cols: CSV_COLS,
     csv_esc: csv_esc,
