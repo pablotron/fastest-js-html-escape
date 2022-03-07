@@ -102,9 +102,15 @@
       };
     })());
 
+    let auto_mutex = false;
     // init worker
     const worker = new Worker('worker.js');
     worker.onmessage = (e) => {
+      if (e.data.data.from === 'auto') {
+        // clear auto mutex
+        auto_mutex = false;
+      }
+
       results.unshift(e.data);
       trigger('#bench-results tbody', 'refresh');
     };
@@ -125,7 +131,8 @@
       num:  last(FNS.nums).id,
     }));
 
-    // automatically run test every 5 seconds
+    // queue auto test every 100ms if auto is enabled and mutex is
+    // unlocked
     setInterval((() => {
       // cache auto toggle, param selects, and rand toggles
       const els = qsa('.bench-param, .bench-rand-toggle').reduce((r, el) => {
@@ -134,7 +141,11 @@
       }, { auto: qs('#bench-auto'), user: {}, rand: {} });
 
       return () => {
-        if (els.auto.checked) {
+        if (els.auto.checked && !auto_mutex) {
+          // lock auto mutex
+          auto_mutex = true;
+
+          // run test
           run(Object.keys(els.rand).reduce((r, id) => {
             const list = FNS[id + 's'];
             r[id] = els.rand[id].checked ? pick(list).id : els.user[id].value;
@@ -142,7 +153,7 @@
           }, { from: 'auto' }));
         }
       };
-    })(), 5000);
+    })(), 100);
 
     // bind to refresh event
     (() => {
