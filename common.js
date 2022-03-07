@@ -181,6 +181,24 @@ const FNS = (() => {
       HTML escape with non-capturing regex, frozen replacement entity
       map, and frozen function.
     `,
+  }, {
+    id: 'h7',
+    name: "h7: Reduce, Replace All",
+    text: `
+      HTML escape with replacement string array.
+    `,
+  }, {
+    id: 'h8',
+    name: "h8: Reduce, Replace All, Frozen",
+    text: `
+      HTML escape with frozen replacement string array.
+    `,
+  }, {
+    id: 'h9',
+    name: "h8: Replace All Literal",
+    text: `
+      HTML escape series of literal replaceAll()s.
+    `,
   }];
 
   const LENS = [{
@@ -188,17 +206,33 @@ const FNS = (() => {
     name: '10 characters',
     text: 'Strings of length 10.'
   }, {
+    id: '50',
+    name: '50 characters',
+    text: 'Strings of length 50.'
+  }, {
     id: '100',
     name: '100 characters',
     text: 'Strings of length 100.'
+  }, {
+    id: '500',
+    name: '500 characters',
+    text: 'Strings of length 500.'
   }, {
     id: '1000',
     name: '1000 characters',
     text: 'Strings of length 1000.'
   }, {
+    id: '1500',
+    name: '1500 characters',
+    text: 'Strings of length 1500.'
+  }, {
     id: '2000',
     name: '2000 characters',
     text: 'Strings of length 2000.'
+  }, {
+    id: '3000',
+    name: '3000 characters',
+    text: 'Strings of length 3000.'
   }];
 
   const NUMS = [{
