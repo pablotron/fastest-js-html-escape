@@ -52,6 +52,27 @@ $ python3 bin/plot-barh.py < stats.csv > times.svg
 $ minify -o times{.min,}.svg
 ```
 
+## Results
+
+My results (Debian, 64-bit Chrome 99.0.4840.0, 2022-03-08) are shown
+below.
+
+<img
+  src='out/sizes.svg'
+  width='100%'
+  title='String Length vs HTML Escape Function Call Time (μs)'
+  alt='String Length vs HTML Escape Function Call Time (μs)'
+  aria-label='String Length vs HTML Escape Function Call Time (μs)'
+/>
+
+<img
+  src='out/times.svg'
+  width='100%'
+  title='HTML Escape Function Call Time (μs)'
+  alt='HTML Escape Function Call Time (μs)'
+  aria-label='HTML Escape Function Call Time (μs)'
+/>
+
 [web worker]: https://en.wikipedia.org/wiki/Web_worker
   "JavaScript that runs from a web page in a background thread."
 [performance api]: https://developer.mozilla.org/en-US/docs/Web/API/Performance
