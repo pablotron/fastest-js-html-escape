@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 
 #
-# Generate plot of aggregate results of statement vs row trigger query
-# timing comparison.
+# plot-line.py: Plot of benchmark results for several JavaScript HTML
+# escape implementations on a variety of string sizes.
 #
-# Reads aggregate data from standard input and writes plot of results as
-# SVG to standard output.
+# Reads aggregate CSV from standard input and writes SVG plot of results
+# to standard output.
+#
+# You can set the scale of the output SVG using the first command-line
+# argument (optional, defaults to 1.5 if unspecified).
 #
 
 import csv
@@ -91,7 +94,12 @@ for row in rows:
   ci = 1.96 * row.sample_stddev / math.sqrt(row.size)
   sets[row.name].add(row.len, row.mean, ci)
 
-scale = 2.0
+# get scale from cli, or default to 1.5
+# (3.0 is recommended for a HD image)
+scale = 1.5
+if len(sys.argv) > 1:
+  scale = float(sys.argv[1])
+
 plt.figure(figsize=(6.4 * scale, 4.8 * scale))
 # plot sets
 for k, s in sets.items():
