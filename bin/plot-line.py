@@ -101,9 +101,9 @@ for k, s in sets.items():
 # configure plot
 # plt.xscale('log')
 # plt.yscale('log')
-plt.xlabel('String Length')
-plt.ylabel('Call Time (μs)')
-plt.title('String Length vs Call Time (μs)')
+plt.xlabel('String Length (bytes)')
+plt.ylabel('Call Time (μs, lower is better)')
+plt.title('String Length vs HTML Escape Function Call Time (μs)')
 plt.legend(loc='upper left')
 
 # save image
