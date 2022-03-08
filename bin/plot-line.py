@@ -17,18 +17,58 @@ import math
 import matplotlib.pyplot as plt
 import scipy.stats as st
 
+# plots
+# https://matplotlib.org/3.3.4/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot
+TESTS = {
+  'h0': {
+    'name': 'h0: Reduce',
+    'fmt': 'r.-',
+  },
 
-STYLES = {
-  'h0': 'r.-',
-  'h1': 'g.-',
-  'h2': 'b.-',
-  'h3': 'c.-',
-  'h4': 'm.-',
-  'h5': 'r,--',
-  'h6': 'g,--',
-  'h7': 'b,--',
-  'h8': 'c,--',
-  'h9': 'm,--',
+  'h1': {
+    'name': 'h1: Reduce, Frozen Array',
+    'fmt': 'g.-',
+  },
+
+  'h2': {
+    'name': 'h2: Match, Capture',
+    'fmt': 'b.-',
+  },
+
+  'h3': {
+    'name': 'h3: Match, Capture, Frozen',
+    'fmt': 'c.-',
+  },
+
+  'h4': {
+    'name': 'h4: Match, No Capture',
+    'fmt': 'm.-',
+  },
+
+  'h5': {
+    'name': 'h5: Match, No Capture, Frozen Map',
+    'fmt': 'r,--',
+  },
+
+  'h6': {
+    'name': 'h6: Match, No Capture, Frozen Map/Function',
+    'fmt': 'g,--',
+  },
+
+  'h7': {
+    'name': 'h7: Reduce, Replace All',
+    'fmt': 'b,--',
+  },
+
+  'h8': {
+    'name': 'h8: Reduce, Replace All, Frozen',
+    'fmt': 'c,--',
+  },
+
+  'h9': {
+    'name': 'h9: Replace All Literal',
+    'fmt': 'm,--',
+  },
 }
 
 # individual statistics row
@@ -54,9 +94,9 @@ class Row:
 class Set:
   """data set"""
 
-  def __init__(self, name):
+  def __init__(self, test_id):
     """create data set"""
-    self.name = name
+    self.test_id = test_id
     self.rows = []
 
   def add(self, x, y, err):
@@ -75,8 +115,7 @@ class Set:
     plt.errorbar(x, y, 
       yerr = e,
       fmt = fmt,
-      label =
-      self.name,
+      label = TESTS[self.test_id]['name'],
       capsize = 3,
       alpha = 0.5,
     )
@@ -103,7 +142,7 @@ if len(sys.argv) > 1:
 plt.figure(figsize=(6.4 * scale, 4.8 * scale))
 # plot sets
 for k, s in sets.items():
-  s.plot(STYLES[k])
+  s.plot(TESTS[k]['fmt'])
 
 # configure plot
 # plt.xscale('log')
