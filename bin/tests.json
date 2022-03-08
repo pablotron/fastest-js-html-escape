@@ -1,0 +1,51 @@
+{
+  "h0": {
+    "name": "h0: Reduce",
+    "fmt": "r.-"
+  },
+
+  "h1": {
+    "name": "h1: Reduce, Frozen Array",
+    "fmt": "g.-"
+  },
+
+  "h2": {
+    "name": "h2: Match, Capture",
+    "fmt": "b.-"
+  },
+
+  "h3": {
+    "name": "h3: Match, Capture, Frozen",
+    "fmt": "c.-"
+  },
+
+  "h4": {
+    "name": "h4: Match, No Capture",
+    "fmt": "m.-"
+  },
+
+  "h5": {
+    "name": "h5: Match, No Capture, Frozen Map",
+    "fmt": "r,--"
+  },
+
+  "h6": {
+    "name": "h6: Match, No Capture, Frozen Map/Function",
+    "fmt": "g,--"
+  },
+
+  "h7": {
+    "name": "h7: Reduce, Replace All",
+    "fmt": "b,--"
+  },
+
+  "h8": {
+    "name": "h8: Reduce, Replace All, Frozen",
+    "fmt": "c,--"
+  },
+
+  "h9": {
+    "name": "h9: Replace All Literal",
+    "fmt": "m,--"
+  }
+}

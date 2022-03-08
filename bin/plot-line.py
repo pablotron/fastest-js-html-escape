@@ -14,62 +14,16 @@
 import csv
 import sys
 import math
+import json
+import os.path as path
 import matplotlib.pyplot as plt
-import scipy.stats as st
 
-# plots
+# read tests from ./tests.json
+#
+# mathplotlib format string documentation:
 # https://matplotlib.org/3.3.4/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot
-TESTS = {
-  'h0': {
-    'name': 'h0: Reduce',
-    'fmt': 'r.-',
-  },
-
-  'h1': {
-    'name': 'h1: Reduce, Frozen Array',
-    'fmt': 'g.-',
-  },
-
-  'h2': {
-    'name': 'h2: Match, Capture',
-    'fmt': 'b.-',
-  },
-
-  'h3': {
-    'name': 'h3: Match, Capture, Frozen',
-    'fmt': 'c.-',
-  },
-
-  'h4': {
-    'name': 'h4: Match, No Capture',
-    'fmt': 'm.-',
-  },
-
-  'h5': {
-    'name': 'h5: Match, No Capture, Frozen Map',
-    'fmt': 'r,--',
-  },
-
-  'h6': {
-    'name': 'h6: Match, No Capture, Frozen Map/Function',
-    'fmt': 'g,--',
-  },
-
-  'h7': {
-    'name': 'h7: Reduce, Replace All',
-    'fmt': 'b,--',
-  },
-
-  'h8': {
-    'name': 'h8: Reduce, Replace All, Frozen',
-    'fmt': 'c,--',
-  },
-
-  'h9': {
-    'name': 'h9: Replace All Literal',
-    'fmt': 'm,--',
-  },
-}
+with open(path.join(path.dirname(sys.argv[0]), "tests.json"), 'rb') as f:
+  TESTS = json.load(f)
 
 # individual statistics row
 class Row:
