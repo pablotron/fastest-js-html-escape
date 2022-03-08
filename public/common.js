@@ -230,7 +230,7 @@ const FNS = (() => {
     `,
   }, {
     id: 'h9',
-    name: "h8: Replace All Literal",
+    name: "h9: Replace All Literal",
     text: `
       HTML escape series of literal replaceAll()s.
     `,
