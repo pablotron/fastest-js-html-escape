@@ -27,7 +27,7 @@ button on the left sidebar to download the raw benchmark results as a
 [CSV][] file.
 
 Use `bin/agg.rb` to aggregate the raw results, and finally
-`bin/plot-line.py` and `bin/plot-bar.py` to plot the aggregate
+`bin/plot-line.py` and `bin/plot-barh.py` to plot the aggregate
 results as an [SVG][].
 
 **Tip:** [Matplotlib][] generates bloated [SVGs][svg], so you may want
@@ -39,11 +39,17 @@ Example (assuming raw results saved as `results.csv`):
 # aggregate results, save as "stats.csv"
 $ ruby bin/agg.py < results.csv > stats.csv 
 
-# generate line plot, save to "stats.svg"
-$ python3 bin/plot-line.py < stats.csv > stats.svg
+# generate line plot, save to "sizes.svg"
+$ python3 bin/plot-line.py < stats.csv > sizes.svg
 
-# (optional) minify line plot, save as "stats.min.svg"
-$ minify -o stats{.min,}.svg
+# (optional) save minified line plot as "sizes.min.svg"
+$ minify -o sizes{.min,}.svg
+
+# generate bar plot, save to "times.svg"
+$ python3 bin/plot-barh.py < stats.csv > times.svg
+
+# (optional) save minified bar plot as "times.min.svg"
+$ minify -o times{.min,}.svg
 ```
 
 [web worker]: https://en.wikipedia.org/wiki/Web_worker
