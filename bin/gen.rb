@@ -43,6 +43,18 @@ module SvgGen
   # Join given threads, wait on given processes.
   #
   class Fence
+    #
+    # Create fence, yield to given block, then wait on it.
+    #
+    def self.run(&block)
+      f = Fence.new
+      block.call(f)
+      f.wait
+    end
+
+    #
+    # Create fence instance.
+    #
     def initialize
       @ths = []
       @pids = []
@@ -69,7 +81,7 @@ module SvgGen
       @ths.each { |th| th.join }
 
       # wait on processes
-      @pids.each { process.wait(pid) }
+      @pids.each { |pid| Process.wait(pid) }
 
       nil
     end
@@ -79,7 +91,7 @@ module SvgGen
   # Spawn processes to generate SVG with given plot command from raw
   # results in src_path.
   #
-  # Returns threads and PIDs for background task.
+  # Adds spawned processes and threads to given fence.
   #
   def self.gen(fence, dst_path, plot_cmd, src_path)
     # threads and process IDs
@@ -124,20 +136,16 @@ module SvgGen
     raise "Usage: #$0 results.csv" unless args.size == 1
     src_path = args.shift
 
-    # create fence
-    fence = Fence.new
+    # run generate commands, wait for results
+    Fence.run do |fence|
+      SVGS.each do |row|
+        # build destination path
+        dst_path = File.join(__dir__, '..', 'out', row[:dst])
 
-    # run generate commands
-    SVGS.each do |row|
-      # build destination path
-      dst_path = File.join(__dir__, '..', 'out', row[:dst])
-
-      # run commands to generate svg, get threads and pids
-      gen(fence, dst_path, row[:cmd], src_path)
+        # run commands to generate svg, get threads and pids
+        gen(fence, dst_path, row[:cmd], src_path)
+      end
     end
-
-    # wait for everything to complete
-    fence.wait
   end
 end
 
