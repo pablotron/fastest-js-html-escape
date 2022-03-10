@@ -1,43 +1,55 @@
 # Fastest JavaScript HTML Escape
 
-Browser tool to benchmark several HTML escape implementations and
-scripts to aggregate and plot the results.
+Companion repository for [my "Fastest JavaScript HTML Escape"
+post][post].
+
+This repository contains a web-based tool to benchmark several
+JavaScript HTML escape implementations and scripts to aggregate and plot
+the results.
 
 ## Usage
 
-View `public/`.  Note that the benchmarking uses the [Performance API][]
-from a [web worker][], so you'll need to serve it via an [HTTP][]
-server.  For example:
+Serve the files in `public/` on a local port.  The tool uses the
+[Performance API][] from a [web worker][], and [web workers][] cannot be
+invoked from a `file:///` URL, so you'll need to serve the files in
+`public/` with a local [HTTP][] server.  Example:
 
 ```sh
 # serve public on port 8080
 $ cd ./public && python3 -m http.server 8080
 ```
 
-Then visit `http://localhost:8080/` to run the benchmarking tool.  It
-will run all of the benchmarks to seed the browser's [JIT][], then start
-the automated benchmarks.
+View `http://localhost:8080/` in your browser.  The tool will run all of
+the benchmarks once to seed the browser's [JIT][], then automatically
+start collecting benchmark results.
 
-Let the automated benchmarks run for a while.  While you're waiting, you
-can use the panels on the left sidebar of the to run manual tests or
-configure the automatic benchmarks.
+Let the benchmarks run for long enough to accumulate at least 100
+results for each implementation.  While you're waiting, you can use the
+panels on the left sidebar of the to run manual tests or configure the
+automatic benchmarks.
 
-After the benchmarking tool has run for a while, use the "Download"
-button on the left sidebar to download the raw benchmark results as a
-[CSV][] file.
+After you have collected enough data, use the "Download" button on the
+left sidebar to download the raw benchmark results as a [CSV][] file.
 
-Use `bin/agg.rb` to aggregate the raw results, and finally
-`bin/plot-line.py` and `bin/plot-barh.py` to plot the aggregate
-results as an [SVG][].
+Finally, run `bin/gen.rb` to generate the [SVGs][] in `out/`.
 
-**Tip:** [Matplotlib][] generates bloated [SVGs][svg], so you may want
-to compact the output with [minify][] or a comparable tool.
+**Tip:** [Matplotlib][] generates bloated [SVGs][svg]; if [minify][] is
+installed, then `gen.rb` will use it to compress the generated
+[SVGs][svg].
 
-Example (assuming raw results saved as `results.csv`):
+```sh
+# aggregate results from "results.csv", write charts to "out/sizes.svg"
+# and "out/times.svg"
+$ bin/gen.rb results.csv
+```
+
+If you'd like to view the intermediate aggregate results, skip `gen.rb`
+and do the following instead (again, assuming raw results in
+`results.csv`):
 
 ```sh
 # aggregate results, save as "stats.csv"
-$ ruby bin/agg.py < results.csv > stats.csv 
+$ ruby bin/agg.py < results.csv > stats.csv
 
 # generate line plot, save to "sizes.svg"
 $ python3 bin/plot-line.py < stats.csv > sizes.svg
@@ -52,10 +64,21 @@ $ python3 bin/plot-barh.py < stats.csv > times.svg
 $ minify -o times{.min,}.svg
 ```
 
+If you'd like to generate larger [SVGs][svg], the Python scripts accept
+an optional command-line argument.  Example:
+
+```sh
+# generate 3x line plot, save to "sizes-hd.svg"
+$ python3 bin/plot-line.py 3.0 < stats.csv > sizes.svg
+
+# (optional) save minified line plot as "sizes-hd.min.svg"
+$ minify -o sizes-hd{.min,}.svg
+```
+
 ## Results
 
-My results (Debian, 64-bit Chrome 99.0.4840.0, 2022-03-08) are shown
-below.
+My results (Lenovo Thinkpad X1 Carbon 9th Gen, Debian, 64-bit Chrome
+99.0.4840.0, 2022-03-08) are shown below.
 
 <img
   src='out/sizes.svg'
@@ -89,3 +112,5 @@ below.
   "Minification tool and library written in Go."
 [matplotlib]: https://matplotlib.org/
   "Python visualization library."
+[post]: https://pablotron.org/2022/03/09/fastest-js-html-escape/
+  "Fastest JavaScript HTML Escape blog post."
