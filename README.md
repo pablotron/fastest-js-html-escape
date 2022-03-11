@@ -9,6 +9,19 @@ the results.
 
 ## Usage
 
+### Run Benchmarks (Easy Way)
+
+Go to [https://pmdn.org/fastest-js-html-escape/][site] and let the tool
+run for long enough to accumulate at least 100 results for each
+implementation.
+
+Use the "Download" button on the left sidebar to download the raw
+benchmark results as a [CSV][] file.
+
+Continue to "Generate Charts".
+
+### Run Benchmarks (Hard Way)
+
 Serve the files in `public/` on a local port.  The tool uses the
 [Performance API][] from a [web worker][], and [web workers][] cannot be
 invoked from a `file:///` URL, so you'll need to serve the files in
@@ -31,7 +44,10 @@ automatic benchmarks.
 After you have collected enough data, use the "Download" button on the
 left sidebar to download the raw benchmark results as a [CSV][] file.
 
-Finally, run `bin/gen.rb` to generate the [SVGs][] in `out/`.
+### Generate Charts
+
+Run `bin/gen.rb` with the path to `results.csv` to generate the [SVGs][]
+in `out/`.
 
 **Tip:** [Matplotlib][] generates bloated [SVGs][svg]; if [minify][] is
 installed, then `gen.rb` will use it to compress the generated
@@ -114,3 +130,5 @@ My results (Lenovo Thinkpad X1 Carbon 9th Gen, Debian, 64-bit Chrome
   "Python visualization library."
 [post]: https://pablotron.org/2022/03/09/fastest-js-html-escape/
   "Fastest JavaScript HTML Escape blog post."
+[site]: https://pmdn.org/fastest-js-html-escape/
+  "Fastest JavaScript HTML Escape online benchmarking tool."
